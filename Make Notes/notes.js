@@ -43,7 +43,7 @@ function showNotes() {
                 <div class="card-body">
                     <h5 class="card-title">${index + 1}. ${element.title}</h5>
                     <p class="card-text"> ${element.text}</p>
-                    <button id="${index}" onclick="deleteNote(this.id)" class="btn btn-primary">Delete Note</button>
+                    <button id="${index}" onclick="deleteNote(this.id)" class="btn btn-danger">Delete Note</button>
                 </div>
             </div>`;
     });
