@@ -3,22 +3,30 @@ showNotes();
 let addBtn = document.getElementById('addBtn');
 addBtn.addEventListener('click', function (e) {
     let addText = document.getElementById("addText");
-    let notes = localStorage.getItem("notes")
-    if (!notes) {
+    let noteHead = document.getElementById("noteHead");
+    let notes = localStorage.getItem("notes");
+    if (notes == null) {
         notesObj = [];
     }
     else {
         notesObj = JSON.parse(notes);
     }
     if (addText.value != "") {
-        notesObj.push(addText.value);
+
+        let noteObj = {
+            title: noteHead.value , 
+            text: addText.value
+        }
+        notesObj.push(noteObj);
         // console.log(notesObj);
         localStorage.setItem("notes", JSON.stringify(notesObj));
-        addText.value = ""
+        addText.value = "";
+        noteHead.value = "";
     }
     showNotes();
 })
 
+// show notes
 function showNotes() {
     let notes = localStorage.getItem("notes")
     if (notes == null) {
@@ -28,12 +36,13 @@ function showNotes() {
         notesObj = JSON.parse(notes);
     }
     let html = ""
+    // console.log("helllo",typeof(notesObj));
     notesObj.forEach(function (element, index) {
         html += `
         <div class="noteCard my-2 mx-2 card" style="width: 18rem;">
                 <div class="card-body">
-                    <h5 class="card-title">Note ${index + 1}</h5>
-                    <p class="card-text"> ${element}</p>
+                    <h5 class="card-title">${index + 1}. ${element.title}</h5>
+                    <p class="card-text"> ${element.text}</p>
                     <button id="${index}" onclick="deleteNote(this.id)" class="btn btn-primary">Delete Note</button>
                 </div>
             </div>`;
@@ -41,11 +50,13 @@ function showNotes() {
     let notesElm = document.getElementById("notes");
     if (notesObj.length != 0) {
         notesElm.innerHTML = html;
-    } else {
-        notesElm.innerHTML = `Nothing to show! Use "Add a Note" section above to add notes.`;
+    } 
+    else {
+        notesElm.innerHTML = `Nothing to show! Add a note.`;
     }
 }
 
+// delete Note
 function deleteNote(index) {
     let notes = localStorage.getItem("notes");
     if (notes == null) {
@@ -58,14 +69,16 @@ function deleteNote(index) {
     showNotes();
 }
 
-
+// search note
 let search = document.getElementById('searchBtn');
 search.addEventListener("click", function () {
+    event.preventDefault();
     let searchTxt = document.getElementById('searchText');
     let inputVal = searchTxt.value.toLowerCase();
     let noteCards = document.getElementsByClassName('noteCard');
     Array.from(noteCards).forEach(function (element) {
         let cardTxt = element.getElementsByTagName("p")[0].innerText;
+        cardTxt = cardTxt.toLowerCase();
         if (cardTxt.includes(inputVal)) {
             element.style.display = "block";
         }
